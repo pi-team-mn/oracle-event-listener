@@ -1,0 +1,11 @@
+{
+  "name": "@pi-team/oracle-event-listener-lib",
+  "version": "1.0.0",
+  "description": "listen to oracle events",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}
