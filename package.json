@@ -1,14 +1,15 @@
 {
-  "name": "@pi-team/oracle-event-listener-lib",
+  "name": "@pi-team-mn/oracle-event-listener",
   "version": "1.0.0",
-  "description": "listen to oracle events",
-  "main": "./lib/index.js",
+  "description": "Libary to listen to OracleDB events and execute on them",
+  "author": "pi-team@mn.nl [David Diks]",
+  "main": "./lib/dequeueEventDB.js",
   "scripts": {
     "build": "tsc",
     "test": "mocha --recursive --require ts-node/register ./src/*.spec.ts",
-    "run": "npm run build && node ./lib/index.js"
+    "run": "npm run build && node ./lib/index.js",
+    "deploy": "npm publish --access public"
   },
-  "author": "",
   "license": "MIT",
   "dependencies": {
     "oracledb": "^4.0.1",

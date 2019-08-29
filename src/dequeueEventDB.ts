@@ -34,16 +34,12 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
     console.log('Database is accepting our connections');
 }
 
-export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, onEvent: ((item: T) => boolean)) {
+export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => boolean)) {
     const readyConnection = await (readyConnectionPool.getConnection());
-    const query = `begin
-                    :event := appl_relatie.persoon_mutaties_event_store.await_persoon_event(:subscriber);
-                 end;`;
-    const dbBind = 'CODA';
 
     try {
         const result: DBResult = await readyConnection.execute(query, {
-            subscriber: {dir: oracledb.BIND_IN, type: oracledb.STRING, val: dbBind},
+            subscriber: {dir: oracledb.BIND_IN, type: oracledb.STRING, val: databaseBind},
             event: {dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 32767}
         });
 
@@ -58,4 +54,11 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, onEv
     } finally {
         await readyConnection.close();
     }
+}
+
+export default {
+    executeOnEvent,
+    testConnection,
+    readPoolConfigFromEnv,
+    getConnection
 }
