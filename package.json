@@ -1,31 +1,37 @@
 {
-  "name": "@pi-team-mn/oracle-event-listener",
-  "version": "1.0.0",
-  "description": "Libary to listen to OracleDB events and execute on them",
-  "author": "pi-team@mn.nl [David Diks]",
-  "main": "./lib/index.js",
-  "scripts": {
-    "build": "tsc",
-    "test": "mocha --recursive --require ts-node/register ./src/*.spec.ts",
-    "run": "npm run build && node ./lib/index.js",
-    "deploy": "npm publish --access public"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "oracledb": "^4.0.1",
-    "tslib": "^1.10.0"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.2.0",
-    "@types/mocha": "^5.2.7",
-    "@types/oracledb": "^4.0.2",
-    "@types/sinon": "^7.0.13",
-    "@types/sinon-chai": "^3.2.3",
-    "chai": "^4.2.0",
-    "mocha": "^6.2.0",
-    "sinon": "^7.4.1",
-    "sinon-chai": "^3.3.0",
-    "ts-node": "^8.3.0",
-    "typescript": "^3.6.2"
-  }
+    "name": "@pi-team-mn/oracle-event-listener",
+    "version": "1.0.2",
+    "description": "Libary to listen to OracleDB events and execute on them",
+    "author": "pi-team@mn.nl [David Diks]",
+    "main": "./lib/index.js",
+    "repository": "https://github.com/pi-team-mn/oracle-event-listener",
+    "scripts": {
+        "build": "tsc",
+        "test": "mocha --recursive --require ts-node/register ./src/*.spec.ts",
+        "run": "npm run build && node ./lib/index.js",
+        "package": "npm publish --access public",
+        "deploy": "npm run build && npm run test && npm run package"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "oracledb": "^4.0.1",
+        "tslib": "^1.10.0"
+    },
+    "files": [
+        "lib/!(*.spec).js",
+        "lib/!(*.spec).d.ts"
+    ],
+    "devDependencies": {
+        "@types/chai": "^4.2.0",
+        "@types/mocha": "^5.2.7",
+        "@types/oracledb": "^4.0.2",
+        "@types/sinon": "^7.0.13",
+        "@types/sinon-chai": "^3.2.3",
+        "chai": "^4.2.0",
+        "mocha": "^6.2.0",
+        "sinon": "^7.4.1",
+        "sinon-chai": "^3.3.0",
+        "ts-node": "^8.3.0",
+        "typescript": "^3.6.2"
+    }
 }

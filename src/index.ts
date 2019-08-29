@@ -1,6 +1,6 @@
 import {getConnection, readPoolConfigFromEnv, testConnection, executeOnEvent} from './dequeueEventDB'
 
-export default {
+export {
     getConnection,
     readPoolConfigFromEnv,
     testConnection,

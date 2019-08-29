@@ -5,6 +5,8 @@ Execute function on Oracle DB events.
 ## Example
 
 ```typescript
+import { executeOnEvent, getConnection, readPoolConfigFromEnv, testConnection } from '@pi-team-mn/oracle-event-listener/lib/dequeueEventDB';
+
 async function main() {
     const oracleConfig = readPoolConfigFromEnv(process.env);
     const pool = await (getConnection(oracleConfig));
