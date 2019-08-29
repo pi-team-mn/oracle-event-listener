@@ -4,10 +4,18 @@ interface OutBindsEvent {
     event: string
 }
 
+/**
+ * Exported for testing, do not use!
+ */
 export interface DBResult {
     outBinds: OutBindsEvent
 }
 
+/**
+ * Check an object and see if it has the proper parameters for Oracle configs.
+ * @param env An object that contains keys.
+ * @returns A configured PoolAttributes object.
+ */
 export function readPoolConfigFromEnv(env: any): oracledb.PoolAttributes {
     const oracleConnectionString = env.ORACLE_CONNECTION_STRING;
     const oracleUser = env.ORACLE_USER;
@@ -24,16 +32,32 @@ export function readPoolConfigFromEnv(env: any): oracledb.PoolAttributes {
     }
 }
 
+/**
+ * Takes PoolAttributes and turns it into a connection pool.
+ * @param config PoolAttributes that connect to a database.
+ * @returns A connection pool to an oracle DB.
+ */
 export async function getConnection(config: oracledb.PoolAttributes) {
     return await oracledb.createPool(config);
 }
 
+/**
+ * Verify that the pool is connected properly by opening a connection.
+ * @param readyConnectionPool An instantiated connection pool to test.
+ */
 export async function testConnection(readyConnectionPool: oracledb.Pool) {
     const readyConnection = await readyConnectionPool.getConnection();
     await readyConnection.close();
     console.log('Database is accepting our connections');
 }
 
+/**
+ * execute `onEvent` when an event is triggered according to `query`.
+ * @param readyConnectionPool A connection pool to an oracle DB.
+ * @param query An SQL query that returns an event.
+ * @param databaseBind Binding for the event queue.
+ * @param onEvent Function to execute on a new event.
+ */
 export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => boolean)) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
