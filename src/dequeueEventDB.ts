@@ -58,7 +58,7 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
  * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
-export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => boolean)) {
+export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<boolean>)) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
     try {
@@ -69,7 +69,9 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
 
         const item: T = JSON.parse(result.outBinds.event);
 
-        onEvent(item);
+        let success = await onEvent(item);
+
+        console.log('success: ', success); //todo: use success to finish transaction
 
         await readyConnection.commit();
     } catch (e) {
