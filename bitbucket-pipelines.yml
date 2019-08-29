@@ -1,0 +1,9 @@
+image: node:10.16.3-slim
+pipelines:
+  default:
+    - step:
+        script:
+          - npm install
+          - npm test
+options:
+  docker: true
