@@ -33,10 +33,4 @@ export declare function testConnection(readyConnectionPool: oracledb.Pool): Prom
  * @param onEvent Function to execute on a new event.
  */
 export declare function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<boolean>)): Promise<void>;
-declare const _default: {
-    executeOnEvent: typeof executeOnEvent;
-    testConnection: typeof testConnection;
-    readPoolConfigFromEnv: typeof readPoolConfigFromEnv;
-    getConnection: typeof getConnection;
-};
-export default _default;
+export {};

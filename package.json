@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Libary to listen to OracleDB events and execute on them",
   "author": "pi-team@mn.nl [David Diks]",
-  "main": "./lib/dequeueEventDB.js",
+  "main": "./lib/index.js",
   "scripts": {
     "build": "tsc",
     "test": "mocha --recursive --require ts-node/register ./src/*.spec.ts",

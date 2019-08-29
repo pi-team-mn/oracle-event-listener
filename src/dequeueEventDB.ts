@@ -81,10 +81,3 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
         await readyConnection.close();
     }
 }
-
-export default {
-    executeOnEvent,
-    testConnection,
-    readPoolConfigFromEnv,
-    getConnection
-}
