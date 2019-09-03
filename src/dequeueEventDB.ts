@@ -44,6 +44,7 @@ export async function getConnection(config: oracledb.PoolAttributes) {
 /**
  * Verify that the pool is connected properly by opening a connection.
  * @param readyConnectionPool An instantiated connection pool to test.
+ * @throws Error When a connection to the DB cannot be established
  */
 export async function testConnection(readyConnectionPool: oracledb.Pool) {
     const readyConnection = await readyConnectionPool.getConnection();
@@ -71,7 +72,7 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
 
         let success = await onEvent(item);
 
-        console.log('success: ', success); //todo: use success to finish transaction
+        console.log('success: ', success);
 
         await readyConnection.commit();
     } catch (e) {

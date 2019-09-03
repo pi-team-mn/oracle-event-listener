@@ -5,9 +5,10 @@ Execute function on Oracle DB events.
 ## Example
 
 ```typescript
-import { executeOnEvent, getConnection, readPoolConfigFromEnv, testConnection } from '@pi-team-mn/oracle-event-listener/lib/dequeueEventDB';
-
 async function main() {
+    const query = `Fill Me`;
+    const databaseBind = 'Binding Agent';
+
     const oracleConfig = readPoolConfigFromEnv(process.env);
     const pool = await (getConnection(oracleConfig));
     await testConnection(pool);
@@ -15,14 +16,15 @@ async function main() {
     let nrConnections = 0;
 
     while (nrConnections < pool.poolMax) {
-        executeOnEvent<EventType>(pool, (item => {
-            console.log(item);
-            return true;
-        })).catch(err => console.error(err));
+        executeOnEvent<IncomingEvent>(pool, query, databaseBind, async item => {
+            return await sendToCoda(transform(item));
+        }).catch((err: any) => console.error(err));
         nrConnections++;
-        console.log(`Awaiting events ... (coroutine ${nrConnections})`)
+        console.log(`Awaiting events ... (coroutine ${nrConnections})`);
     }
 }
+
+main().catch(err => console.error(err))
 ```
 
 ## Environment variables
