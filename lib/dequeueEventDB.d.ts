@@ -23,6 +23,7 @@ export declare function getConnection(config: oracledb.PoolAttributes): Promise<
 /**
  * Verify that the pool is connected properly by opening a connection.
  * @param readyConnectionPool An instantiated connection pool to test.
+ * @throws Error When a connection to the DB cannot be established
  */
 export declare function testConnection(readyConnectionPool: oracledb.Pool): Promise<void>;
 /**
@@ -32,5 +33,5 @@ export declare function testConnection(readyConnectionPool: oracledb.Pool): Prom
  * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
-export declare function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<boolean>)): Promise<void>;
+export declare function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<any | void>)): Promise<void>;
 export {};

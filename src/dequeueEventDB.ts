@@ -59,7 +59,7 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
  * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
-export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<boolean>)) {
+export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<any | void>)) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
     try {
