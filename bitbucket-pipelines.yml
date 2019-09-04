@@ -4,7 +4,7 @@ pipelines:
     - step:
         script:
           - npm install
-          - npm lint
+          - npm run tslint
           - npm test
 options:
   docker: true
