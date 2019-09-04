@@ -1,14 +1,14 @@
 import * as oracledb from 'oracledb';
 
 interface OutBindsEvent {
-    event: string
+    event: string;
 }
 
 /**
  * Exported for testing, do not use!
  */
 export interface DBResult {
-    outBinds: OutBindsEvent
+    outBinds: OutBindsEvent;
 }
 
 /**
@@ -28,7 +28,7 @@ export function readPoolConfigFromEnv(env: any): oracledb.PoolAttributes {
             connectionString: process.env.ORACLE_CONNECTION_STRING,
             user: process.env.ORACLE_USER,
             password: process.env.ORACLE_PASSWORD
-        }
+        };
     }
 }
 
@@ -59,7 +59,8 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
  * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
-export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string, onEvent: ((item: T) => Promise<any | void>)) {
+export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string,
+                                        onEvent: ((item: T) => Promise<any | void>)) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
     try {
@@ -70,7 +71,7 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
 
         const item: T = JSON.parse(result.outBinds.event);
 
-        let success = await onEvent(item);
+        const success = await onEvent(item);
 
         console.log('success: ', success);
 

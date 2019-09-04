@@ -1,8 +1,8 @@
-import {getConnection, readPoolConfigFromEnv, testConnection, executeOnEvent} from './dequeueEventDB'
+import { executeOnEvent, getConnection, readPoolConfigFromEnv, testConnection } from './dequeueEventDB';
 
 export {
     getConnection,
     readPoolConfigFromEnv,
     testConnection,
     executeOnEvent
-}
+};

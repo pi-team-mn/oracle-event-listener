@@ -4,6 +4,7 @@ pipelines:
     - step:
         script:
           - npm install
+          - npm lint
           - npm test
 options:
   docker: true
