@@ -1,6 +1,6 @@
 # Oracle Event Listener
 
-Execute function on Oracle DB events.
+Execute function on Oracle DB events. Oracle AW is required to use this library!
 
 ## Example
 

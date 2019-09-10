@@ -53,14 +53,16 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
 }
 
 /**
- * execute `onEvent` when an event is triggered according to `query`.
+ * execute `onEvent` when an Oracle AWS event is triggered according to `query`.
+ * On success, the result will be committed. On a failure, the transaction will be rolled back.
+ *
  * @param readyConnectionPool A connection pool to an oracle DB.
- * @param query An SQL query that returns an event.
+ * @param query A PL/SQL block that looks for events. Max payload is 32KB.
  * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
 export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string,
-                                        onEvent: ((item: T) => Promise<any | void>)) {
+                                        onEvent: ((item: T) => Promise<void>)) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
     try {
@@ -71,10 +73,7 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
 
         const item: T = JSON.parse(result.outBinds.event);
 
-        const success = await onEvent(item);
-
-        console.log('success: ', success);
-
+        await onEvent(item);
         await readyConnection.commit();
     } catch (e) {
         console.error(e);
