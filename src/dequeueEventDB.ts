@@ -11,6 +11,8 @@ export interface DBResult {
     outBinds: OutBindsEvent;
 }
 
+const JSON_EVENT_MAX_SIZE = 32767;
+
 /**
  * Check an object and see if it has the proper parameters for Oracle configs.
  * @param env An object that contains keys.
@@ -54,21 +56,20 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
 
 /**
  * execute `onEvent` when an Oracle AWS event is triggered according to `query`.
- * On success, the result will be committed. On a failure, the transaction will be rolled back.
+ * On success, the result will be committed. On an exception, the transaction will be rolled back.
  *
  * @param readyConnectionPool A connection pool to an oracle DB.
  * @param query A PL/SQL block that looks for events. Max payload is 32KB.
  * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
-export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string, databaseBind: string,
+export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string,
                                         onEvent: ((item: T) => Promise<void>)) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
     try {
         const result: DBResult = await readyConnection.execute(query, {
-            subscriber: {dir: oracledb.BIND_IN, type: oracledb.STRING, val: databaseBind},
-            event: {dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 32767}
+            event: {dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: JSON_EVENT_MAX_SIZE}
         });
 
         const item: T = JSON.parse(result.outBinds.event);

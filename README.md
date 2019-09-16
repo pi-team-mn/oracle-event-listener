@@ -6,8 +6,10 @@ Execute function on Oracle DB events. Oracle AW is required to use this library!
 
 ```typescript
 async function main() {
-    const query = `Fill Me`;
-    const databaseBind = 'Binding Agent';
+    // The :event in the query is important!
+    const query = `begin
+                                      :event := event_source_package.dequeue_event_function();
+                                   end;`; 
 
     const oracleConfig = readPoolConfigFromEnv(process.env);
     const pool = await (getConnection(oracleConfig));
@@ -16,7 +18,7 @@ async function main() {
     let nrConnections = 0;
 
     while (nrConnections < pool.poolMax) {
-        executeOnEvent<IncomingEvent>(pool, query, databaseBind, async item => {
+        executeOnEvent<IncomingEvent>(pool, query, async item => {
             return await sendToCoda(transform(item));
         }).catch((err: any) => console.error(err));
         nrConnections++;
