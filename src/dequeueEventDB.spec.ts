@@ -63,7 +63,7 @@ describe('dequeueEventDB', () => {
                 getConnection: sinon.stub().resolves(connectionStub)
             } as unknown as Pool;
 
-            await executeOnEvent<any>(poolStub, '', '', item => item);
+            await executeOnEvent<any>(poolStub, '', item => item);
 
             expect(connectionStub.close).to.be.have.been.called;
         });
@@ -79,7 +79,7 @@ describe('dequeueEventDB', () => {
             } as unknown as Pool;
 
             try {
-                await executeOnEvent<any>(poolStub, '', '', item => item);
+                await executeOnEvent<any>(poolStub, '', _ => Promise.resolve());
                 // tslint:disable-next-line:no-empty
             } catch (e) {
 
