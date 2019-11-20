@@ -1,6 +1,6 @@
 {
     "name": "@pi-team-mn/oracle-event-listener",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "description": "Libary to listen to OracleDB events and execute on them",
     "author": "pi-team@mn.nl [David Diks]",
     "main": "./lib/index.js",

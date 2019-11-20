@@ -7,7 +7,7 @@ interface OutBindsEvent {
 /**
  * Exported for testing, do not use!
  */
-export interface DBResult {
+export interface DBResult{
     outBinds: OutBindsEvent;
 }
 
@@ -68,6 +68,7 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
     const readyConnection = await (readyConnectionPool.getConnection());
 
     try {
+        // @ts-ignore <- result HAS TO be an event, otherwise error!
         const result: DBResult = await readyConnection.execute(query, {
             event: {dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: JSON_EVENT_MAX_SIZE}
         });
