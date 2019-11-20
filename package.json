@@ -9,7 +9,7 @@
         "build": "tsc",
         "test": "mocha --recursive --require ts-node/register ./src/*.spec.ts",
         "run": "npm run build && node ./lib/index.js",
-        "tslint": "tslint --config tslint.json ./src/**.ts",
+        "tslint": "tslint -p tslint.json ./src/**.ts",
         "package": "npm publish --access public",
         "verify": "npm run tslint && npm run test",
         "deploy": "npm run build && npm run verify && npm run package"

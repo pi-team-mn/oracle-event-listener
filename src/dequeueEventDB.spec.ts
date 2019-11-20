@@ -20,10 +20,10 @@ describe('dequeueEventDB', () => {
 
         it('returns a connection on data present', () => {
             expect(dequeueEventDB.readPoolConfigFromEnv({
-                ORACLE_CONNECTION_STRING: 'test',
-                ORACLE_USER: 'test',
-                ORACLE_PASSWORD: 'test'
-            })).to.exist;
+                                                            ORACLE_CONNECTION_STRING: 'test',
+                                                            ORACLE_USER: 'test',
+                                                            ORACLE_PASSWORD: 'test'
+                                                        })).to.exist;
         });
 
         it('throws an error when configs are missing', () => {

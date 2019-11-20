@@ -7,7 +7,7 @@ interface OutBindsEvent {
 /**
  * Exported for testing, do not use!
  */
-export interface DBResult{
+export interface DBResult {
     outBinds: OutBindsEvent;
 }
 
