@@ -1,4 +1,5 @@
 import * as oracledb from 'oracledb';
+import promiseRetry from 'promise-retry';
 
 interface OutBindsEvent {
     event: string;
@@ -60,7 +61,6 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
  *
  * @param readyConnectionPool A connection pool to an oracle DB.
  * @param query A PL/SQL block that looks for events. Max payload is 32KB.
- * @param databaseBind Binding for the event queue.
  * @param onEvent Function to execute on a new event.
  */
 export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string,
@@ -82,5 +82,19 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
         throw new Error(`Error at dequeue event: ${e}`);
     } finally {
         await readyConnection.close();
+    }
+}
+
+/**
+ * Keeps waiting for new events to execute.
+ *
+ * @param readyConnectionPool A connection pool to an oracle DB.
+ * @param query A PL/SQL block that looks for events. Max payload is 32KB.
+ * @param onEvent Function to execute on a new event.
+ */
+export async function keepExecutingOnEvents<T>(readyConnectionPool: oracledb.Pool, query: string,
+                                               onEvent: ((item: T) => Promise<void>)) {
+    while (true) {
+        await promiseRetry(async retry => executeOnEvent(readyConnectionPool, query, onEvent).catch(retry), {forever: true});
     }
 }

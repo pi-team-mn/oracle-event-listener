@@ -1,32 +1,36 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "lib": [
-      "es5",
-      "es2015.promise",
-      "es2015.core",
-      "dom",
-      "es6",
-      "es2017"
-    ],
-    "target": "es2017",
-    "module": "commonjs",
-    "noEmitHelpers": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "sourceRoot": "src",
-    "outDir": "lib",
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true
-  },
-  "exclude": [
-    "testcontainers", "test", "node_modules", "lib"
-  ]
+    "compilerOptions": {
+        "declaration": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "esModuleInterop": true,
+        "lib": [
+            "es5",
+            "es2015.promise",
+            "es2015.core",
+            "dom",
+            "es6",
+            "es2017"
+        ],
+        "target": "es2017",
+        "module": "commonjs",
+        "noEmitHelpers": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "sourceRoot": "src",
+        "outDir": "lib",
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": true
+    },
+    "exclude": [
+        "testcontainers",
+        "test",
+        "node_modules",
+        "lib"
+    ]
 }
