@@ -2,7 +2,7 @@ import { expect, use } from 'chai';
 import * as oracledb from 'oracledb';
 import { Connection, Pool } from 'oracledb';
 import sinon = require('sinon');
-import * as sinonChai from 'sinon-chai';
+import sinonChai from 'sinon-chai';
 import * as dequeueEventDB from './dequeueEventDB';
 import { DBResult, executeOnEvent, testConnection } from './dequeueEventDB';
 
