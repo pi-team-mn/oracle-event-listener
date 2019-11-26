@@ -1,6 +1,5 @@
 import { expect, use } from 'chai';
-import * as oracledb from 'oracledb';
-import { Connection, Pool } from 'oracledb';
+import oracledb from 'oracledb';
 import sinon = require('sinon');
 import sinonChai from 'sinon-chai';
 import * as dequeueEventDB from './dequeueEventDB';
@@ -57,11 +56,11 @@ describe('dequeueEventDB', () => {
                 execute: sinon.stub().returns(queryResult),
                 commit: sinon.stub().resolves(),
                 close: sinon.stub().resolves()
-            } as unknown as Connection;
+            } as unknown as oracledb.Connection;
 
             const poolStub = {
                 getConnection: sinon.stub().resolves(connectionStub)
-            } as unknown as Pool;
+            } as unknown as oracledb.Pool;
 
             await executeOnEvent<any>(poolStub, '', item => item);
 
@@ -76,7 +75,7 @@ describe('dequeueEventDB', () => {
             };
             const poolStub = {
                 getConnection: sinon.stub().resolves(connectionStub)
-            } as unknown as Pool;
+            } as unknown as oracledb.Pool;
 
             try {
                 await executeOnEvent<any>(poolStub, '', _ => Promise.resolve());

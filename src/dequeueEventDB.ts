@@ -1,4 +1,4 @@
-import * as oracledb from 'oracledb';
+import oracledb from 'oracledb';
 import promiseRetry from 'promise-retry';
 
 interface OutBindsEvent {
@@ -28,9 +28,9 @@ export function readPoolConfigFromEnv(env: any): oracledb.PoolAttributes {
         throw new Error(`You are missing environment variables!`);
     } else {
         return {
-            connectionString: process.env.ORACLE_CONNECTION_STRING,
-            user: process.env.ORACLE_USER,
-            password: process.env.ORACLE_PASSWORD
+            connectionString: oracleConnectionString,
+            user: oracleUser,
+            password: oraclePassword
         };
     }
 }
@@ -41,7 +41,15 @@ export function readPoolConfigFromEnv(env: any): oracledb.PoolAttributes {
  * @returns A connection pool to an oracle DB.
  */
 export async function getConnection(config: oracledb.PoolAttributes) {
-    return await oracledb.createPool(config);
+    return oracledb.createPool(config);
+}
+
+/**
+ * Closes a pool
+ * @param pool An open pool
+ */
+export async function closeConnection(pool: oracledb.Pool) {
+    return pool.close(10);
 }
 
 /**
@@ -79,7 +87,7 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
         await readyConnection.commit();
     } catch (e) {
         console.error(e);
-        throw new Error(`Error at dequeue event: ${e}`);
+        await readyConnection.rollback();
     } finally {
         await readyConnection.close();
     }
