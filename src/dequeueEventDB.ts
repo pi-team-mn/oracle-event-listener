@@ -70,24 +70,32 @@ export async function testConnection(readyConnectionPool: oracledb.Pool) {
  * @param readyConnectionPool A connection pool to an oracle DB.
  * @param query A PL/SQL block that looks for events. Max payload is 32KB.
  * @param onEvent Function to execute on a new event.
+ * @param onError Function to execute on an error. If undefined, the transaction will be rolled back.
  */
-export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, query: string,
-                                        onEvent: ((item: T) => Promise<void>)) {
+export async function executeOnEvent<T>(
+    readyConnectionPool: oracledb.Pool,
+    query: string,
+    onEvent: ((item: T) => Promise<void>),
+    onError?: ((item: T, connection: oracledb.Connection, err: Error) => Promise<void>)
+) {
     const readyConnection = await (readyConnectionPool.getConnection());
 
+    // @ts-ignore <- result HAS TO be an event, otherwise error!
+    const result: DBResult = await readyConnection.execute(query, {
+        event: {dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: JSON_EVENT_MAX_SIZE}
+    });
+
+    const item: T = JSON.parse(result.outBinds.event);
+
     try {
-        // @ts-ignore <- result HAS TO be an event, otherwise error!
-        const result: DBResult = await readyConnection.execute(query, {
-            event: {dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: JSON_EVENT_MAX_SIZE}
-        });
-
-        const item: T = JSON.parse(result.outBinds.event);
-
         await onEvent(item);
         await readyConnection.commit();
     } catch (e) {
         console.error(e);
-        await readyConnection.rollback();
+        if (onError) {
+            await onError(item, readyConnection, e);
+            await readyConnection.commit();
+        }
     } finally {
         await readyConnection.close();
     }
@@ -99,10 +107,15 @@ export async function executeOnEvent<T>(readyConnectionPool: oracledb.Pool, quer
  * @param readyConnectionPool A connection pool to an oracle DB.
  * @param query A PL/SQL block that looks for events. Max payload is 32KB.
  * @param onEvent Function to execute on a new event.
+ * @param onError Function to execute on an error. If undefined, the transaction will be rolled back.
  */
-export async function keepExecutingOnEvents<T>(readyConnectionPool: oracledb.Pool, query: string,
-                                               onEvent: ((item: T) => Promise<void>)) {
+export async function keepExecutingOnEvents<T>(
+    readyConnectionPool: oracledb.Pool,
+    query: string,
+    onEvent: ((item: T) => Promise<void>),
+    onError?: ((item: T, connection: oracledb.Connection, err: Error) => Promise<void>)
+) {
     while (true) {
-        await promiseRetry(async retry => executeOnEvent(readyConnectionPool, query, onEvent).catch(retry), {forever: true});
+        await promiseRetry(async retry => executeOnEvent(readyConnectionPool, query, onEvent, onError).catch(retry), {forever: true});
     }
 }

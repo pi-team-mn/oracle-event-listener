@@ -62,14 +62,19 @@ describe('dequeueEventDB', () => {
                 getConnection: sinon.stub().resolves(connectionStub)
             } as unknown as oracledb.Pool;
 
-            await executeOnEvent<any>(poolStub, '', item => item);
+            await executeOnEvent<any>(poolStub, '', item => item, () => Promise.resolve());
 
             expect(connectionStub.close).to.be.have.been.called;
         });
 
         it('closes the connection when an error occurs', async() => {
+            const queryResult: DBResult = {
+                outBinds: {
+                    event: '{}'
+                }
+            };
             const connectionStub = {
-                execute: sinon.stub().throws(Error),
+                execute: sinon.stub().resolves(queryResult),
                 commit: sinon.stub().resolves(),
                 close: sinon.stub().resolves()
             };
@@ -78,12 +83,36 @@ describe('dequeueEventDB', () => {
             } as unknown as oracledb.Pool;
 
             try {
-                await executeOnEvent<any>(poolStub, '', _ => Promise.resolve());
+                await executeOnEvent<any>(poolStub, '', _ => Promise.reject('this is a test'), () => Promise.resolve());
                 // tslint:disable-next-line:no-empty
-            } catch (e) {
-
             } finally {
-                // nothing
+                console.log('hello');
+            }
+
+            expect(connectionStub.commit).to.have.been.called;
+            expect(connectionStub.close).to.have.been.called;
+        });
+
+        it('does not call commit if an error occurs and onError is not specified', async() => {
+            const queryResult: DBResult = {
+                outBinds: {
+                    event: '{}'
+                }
+            };
+            const connectionStub = {
+                execute: sinon.stub().resolves(queryResult),
+                commit: sinon.stub().resolves(),
+                close: sinon.stub().resolves()
+            };
+            const poolStub = {
+                getConnection: sinon.stub().resolves(connectionStub)
+            } as unknown as oracledb.Pool;
+
+            try {
+                await executeOnEvent<any>(poolStub, '', _ => Promise.reject('this is a test'));
+                // tslint:disable-next-line:no-empty
+            } finally {
+                console.log('hello');
             }
 
             expect(connectionStub.commit).to.not.have.been.called;
