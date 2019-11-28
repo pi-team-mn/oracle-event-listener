@@ -91,10 +91,11 @@ export async function executeOnEvent<T>(
         await onEvent(item);
         await readyConnection.commit();
     } catch (e) {
-        console.error(e);
         if (onError) {
             await onError(item, readyConnection, e);
             await readyConnection.commit();
+        } else {
+            console.error(e);
         }
     } finally {
         await readyConnection.close();
